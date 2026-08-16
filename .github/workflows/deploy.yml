@@ -7,8 +7,9 @@ on:
       - claude/quranic-learning-app-g3w7wf
   workflow_dispatch:
 
+# contents: write is for pushing the built site to the gh-pages branch.
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -18,6 +19,15 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Publishes the same build two ways, so the site is live under either
+  # setting of Settings → Pages → Source:
+  #
+  #   "GitHub Actions"                     → the deploy job below
+  #   "Deploy from a branch" → gh-pages /  → the branch pushed here
+  #
+  # Only one is ever active; the other is a harmless no-op. This exists
+  # because GITHUB_TOKEN cannot set the source itself, and serving the
+  # repository source instead of the build yields a blank page.
   build:
     runs-on: ubuntu-latest
     steps:
@@ -34,9 +44,25 @@ jobs:
       # it works at /<repo>/, at a domain root, or anywhere else.
       - run: npm run build
 
-      # Requires Settings → Pages → Source: "GitHub Actions".
-      # Enabling it from here needs permissions GITHUB_TOKEN does not have.
+      - name: Publish build to gh-pages branch
+        env:
+          SHA: ${{ github.sha }}
+          REPO: ${{ github.repository }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          cd dist
+          git init -q -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Deploy $SHA"
+          # Force-push: this branch holds build output only, never history.
+          git push -q --force "https://x-access-token:${TOKEN}@github.com/${REPO}.git" gh-pages
+          echo "Pushed $(git rev-parse --short HEAD) to gh-pages"
+
       - uses: actions/configure-pages@v5
+        continue-on-error: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -45,6 +71,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    # Only meaningful when Source is "GitHub Actions"; it fails harmlessly
+    # otherwise, and the gh-pages branch above still serves the site.
+    continue-on-error: true
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

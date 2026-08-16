@@ -1,4 +1,4 @@
-import { copyFileSync } from 'node:fs'
+import { copyFileSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
@@ -58,17 +58,21 @@ function inlineEntryScript(): Plugin {
 }
 
 /**
- * GitHub Pages serves 404.html for any path it cannot find. Shipping a copy of
- * index.html there means a mistyped or deep-linked URL still boots the app
- * rather than showing GitHub's 404.
+ * Two files GitHub Pages cares about that Vite does not emit:
+ *
+ * - 404.html, a copy of index.html, so a mistyped or deep-linked URL boots the
+ *   app instead of showing GitHub's 404 page.
+ * - .nojekyll, which stops Jekyll from processing the output when the site is
+ *   served from a branch rather than an Actions artifact.
  */
-function spaFallback(): Plugin {
+function githubPagesFiles(): Plugin {
   return {
-    name: 'spa-404-fallback',
+    name: 'github-pages-files',
     apply: 'build',
     closeBundle() {
       const dir = resolve(__dirname, 'dist')
       copyFileSync(resolve(dir, 'index.html'), resolve(dir, '404.html'))
+      writeFileSync(resolve(dir, '.nojekyll'), '')
     },
   }
 }
@@ -77,5 +81,5 @@ function spaFallback(): Plugin {
 // Pages project site, a custom domain sub-path, S3, or a local `file://` open.
 export default defineConfig({
   base: './',
-  plugins: [react(), tailwindcss(), inlineEntryScript(), spaFallback()],
+  plugins: [react(), tailwindcss(), inlineEntryScript(), githubPagesFiles()],
 })
