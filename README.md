@@ -51,6 +51,29 @@ npm run lint
 `base` is `./` and routing is hash-based, so `dist/` can be dropped on GitHub
 Pages, S3, Netlify or any sub-path without configuration.
 
+### Deployment hardening
+
+`.github/workflows/deploy.yml` publishes `dist/` to GitHub Pages on every push
+to the default branch. Pages must be set to **Settings → Pages → Source:
+"GitHub Actions"** by hand — `configure-pages` cannot enable it, because
+`GITHUB_TOKEN` lacks the permission (`Resource not accessible by integration`).
+
+Three build-time measures exist so a deployed page cannot fail silently:
+
+- **The entry chunk is inlined into `index.html`** (`inlineEntryScript` in
+  `vite.config.ts`). A separate `<script src>` is the one request whose failure
+  produces a blank page with a correct-looking tab title, since the HTML and
+  its `<title>` still arrive. Inlining removes that failure mode; the build
+  throws if the inline ever silently reverts to an external script.
+- **`404.html` is a copy of `index.html`**, so unknown or deep-linked paths
+  boot the app instead of showing GitHub's 404.
+- **A fallback panel in `index.html`** reveals itself if `#root` is still empty
+  after 5s, printing the captured error — a white screen is never silent.
+
+The stylesheet stays external on purpose: if it fails the page is unstyled but
+still readable, and keeping it out of the HTML leaves its font URLs resolving
+against `assets/` where they belong.
+
 ## Adding another surah
 
 1. Drop the recording in `public/audio/`.

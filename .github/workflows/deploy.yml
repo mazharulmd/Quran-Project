@@ -30,11 +30,9 @@ jobs:
 
       - run: npm ci
 
-      - name: Build
-        # Project pages are served from /<repo>/, so assets need that prefix.
-        env:
-          VITE_BASE: /${{ github.event.repository.name }}/
-        run: npm run build
+      # The build uses relative asset paths, so it needs no base-path input:
+      # it works at /<repo>/, at a domain root, or anywhere else.
+      - run: npm run build
 
       # Requires Settings → Pages → Source: "GitHub Actions".
       # Enabling it from here needs permissions GITHUB_TOKEN does not have.

@@ -13,6 +13,83 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <noscript>
+      <div style="font-family: system-ui, sans-serif; padding: 2rem; text-align: center">
+        এই অ্যাপটি চালাতে জাভাস্ক্রিপ্ট চালু থাকা প্রয়োজন।
+      </div>
+    </noscript>
+
+    <!--
+      Last-resort visible fallback. If the app fails to mount, say so on screen
+      with the underlying error instead of leaving a silent white page — a blank
+      render is otherwise indistinguishable from a still-loading one.
+    -->
+    <div
+      id="boot-error"
+      hidden
+      style="
+        font-family: system-ui, sans-serif;
+        max-width: 40rem;
+        margin: 3rem auto;
+        padding: 1.5rem;
+        border: 1px solid #d9534f;
+        border-radius: 12px;
+        line-height: 1.6;
+      "
+    >
+      <h1 style="margin: 0 0 0.5rem; font-size: 1.25rem">অ্যাপটি চালু হয়নি</h1>
+      <p style="margin: 0 0 0.75rem">
+        পেজটি লোড হয়েছে, কিন্তু অ্যাপ্লিকেশনটি চালু হতে পারেনি। নিচের বার্তাটি সমস্যার কারণ জানাচ্ছে —
+        অনুগ্রহ করে পেজটি একবার রিফ্রেশ করুন (Ctrl+Shift+R)।
+      </p>
+      <pre
+        id="boot-error-detail"
+        style="
+          white-space: pre-wrap;
+          word-break: break-word;
+          background: rgba(127, 127, 127, 0.12);
+          padding: 0.75rem;
+          border-radius: 8px;
+          margin: 0;
+          font-size: 0.85rem;
+        "
+      ></pre>
+    </div>
+
+    <script>
+      ;(function () {
+        var detail = null
+
+        // Capture phase catches failed subresource loads, which do not bubble.
+        window.addEventListener(
+          'error',
+          function (event) {
+            var target = event.target
+            if (target && target !== window && (target.src || target.href)) {
+              detail = 'Failed to load: ' + (target.src || target.href)
+            } else if (event.message) {
+              detail = event.message
+            }
+          },
+          true,
+        )
+
+        window.addEventListener('unhandledrejection', function (event) {
+          var reason = event.reason
+          detail = 'Unhandled promise rejection: ' + ((reason && reason.message) || reason)
+        })
+
+        setTimeout(function () {
+          var root = document.getElementById('root')
+          if (!root || root.children.length > 0) return
+          document.getElementById('boot-error-detail').textContent =
+            detail || 'No error was reported — the app script may not have run at all.'
+          document.getElementById('boot-error').hidden = false
+        }, 5000)
+      })()
+    </script>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
