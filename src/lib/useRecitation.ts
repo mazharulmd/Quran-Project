@@ -83,7 +83,10 @@ export function useRecitation(surah: Surah): Recitation {
     if (!surah.audioUrl) return
     const audio = new Audio()
     audio.preload = 'auto'
-    audio.src = new URL(surah.audioUrl, document.baseURI).href
+    // Resolve against the deployed base, not the document URL: on a project
+    // page visited as /Quran-Project (no trailing slash) the document URL alone
+    // would resolve the clip to the domain root.
+    audio.src = new URL(surah.audioUrl, new URL(import.meta.env.BASE_URL, document.baseURI)).href
     audioRef.current = audio
 
     const onReady = () => setReady(true)
