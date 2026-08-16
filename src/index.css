@@ -1,0 +1,213 @@
+@import 'tailwindcss';
+
+@import '@fontsource/scheherazade-new/400.css';
+@import '@fontsource/scheherazade-new/700.css';
+@import '@fontsource/amiri/arabic-400.css';
+@import '@fontsource/hind-siliguri/400.css';
+@import '@fontsource/hind-siliguri/500.css';
+@import '@fontsource/hind-siliguri/600.css';
+@import '@fontsource/hind-siliguri/700.css';
+@import '@fontsource/noto-sans-bengali/400.css';
+@import '@fontsource/noto-sans-bengali/600.css';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-bangla: 'Hind Siliguri', 'Noto Sans Bengali', system-ui, sans-serif;
+  --font-arabic: 'Scheherazade New', 'Amiri', 'Traditional Arabic', serif;
+
+  --color-parchment: #fbf7ef;
+  --color-parchment-deep: #f3ece0;
+  --color-ink: #1c2536;
+  --color-night: #0b1220;
+  --color-night-soft: #131c2e;
+
+  --color-gold-400: #d8b26a;
+  --color-gold-500: #c19a4b;
+  --color-gold-600: #a07d33;
+  --color-emerald-deep: #0f6b52;
+}
+
+/*
+ * Theme tokens. Every colour used by the UI resolves through these so the
+ * light ("mushaf paper") and dark ("night reading") themes stay in sync.
+ */
+:root {
+  --bg: #fbf7ef;
+  --bg-elevated: #ffffff;
+  --bg-sunken: #f3ece0;
+  --border: #e6dcc8;
+  --border-strong: #d5c7ab;
+  --text: #1c2536;
+  --text-muted: #5d6b81;
+  --text-faint: #8a94a6;
+  --accent: #0f6b52;
+  --accent-soft: #e3f1ea;
+  --gold: #a07d33;
+  --gold-soft: #f6edd8;
+
+  /* Tajweed rule colours — light theme */
+  --tj-ikhfa: #6d28d9;
+  --tj-ghunnah: #be1259;
+  --tj-qalqalah: #0369a1;
+  --tj-madd: #c2410c;
+  --tj-izhar: #15803d;
+  --tj-lam-shamsi: #64748b;
+  --tj-lam-qamari: #7c5a10;
+
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #0b1220;
+  --bg-elevated: #131c2e;
+  --bg-sunken: #08101c;
+  --border: #22304a;
+  --border-strong: #33456a;
+  --text: #e8edf6;
+  --text-muted: #9aa8c0;
+  --text-faint: #6c7c96;
+  --accent: #34d399;
+  --accent-soft: #10281f;
+  --gold: #d8b26a;
+  --gold-soft: #241d0f;
+
+  /* Tajweed rule colours — dark theme (lifted for contrast on night bg) */
+  --tj-ikhfa: #b191fb;
+  --tj-ghunnah: #f9789f;
+  --tj-qalqalah: #6bbdf5;
+  --tj-madd: #fb9a5c;
+  --tj-izhar: #62d68b;
+  --tj-lam-shamsi: #a7b4c9;
+  --tj-lam-qamari: #e2bf72;
+
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-bangla);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    /* Room for the sticky player on small screens */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  button {
+    font-family: inherit;
+  }
+}
+
+@layer components {
+  .surface {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    background: var(--bg-sunken);
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    border-radius: 0.7rem;
+    border: 1px solid var(--border);
+    background: var(--bg-elevated);
+    color: var(--text);
+    padding: 0.45rem 0.85rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background 120ms ease,
+      border-color 120ms ease,
+      transform 120ms ease;
+  }
+  .btn:hover:not(:disabled) {
+    border-color: var(--border-strong);
+    background: var(--bg-sunken);
+  }
+  .btn:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .btn-primary {
+    background: var(--accent);
+    border-color: transparent;
+    color: #04140f;
+    font-weight: 600;
+  }
+  .dark .btn-primary {
+    color: #04140f;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--accent);
+    filter: brightness(1.06);
+    border-color: transparent;
+  }
+
+  /* Arabic ayah typography */
+  .arabic {
+    font-family: var(--font-arabic);
+    direction: rtl;
+    unicode-bidi: isolate;
+    line-height: 2.15;
+    font-weight: 400;
+  }
+
+  .uccharon {
+    font-family: var(--font-bangla);
+    color: var(--text);
+    line-height: 1.85;
+  }
+}
+
+/* Utility: hide scrollbar on horizontal tab strips while keeping scroll */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
