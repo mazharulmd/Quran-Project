@@ -83,8 +83,20 @@
         setTimeout(function () {
           var root = document.getElementById('root')
           if (!root || root.children.length > 0) return
-          document.getElementById('boot-error-detail').textContent =
-            detail || 'No error was reported — the app script may not have run at all.'
+
+          var text = detail || 'No error was reported — the app script may not have run at all.'
+
+          // This file is the un-built source template: the build replaces the
+          // /src/main.tsx tag with the compiled bundle. Seeing it live means
+          // Pages is serving the repository itself rather than the artifact.
+          if (detail && detail.indexOf('/src/main.tsx') !== -1) {
+            text =
+              text +
+              '\n\nGitHub Pages is serving the repository source instead of the built site.' +
+              '\nFix: Settings → Pages → Build and deployment → Source: "GitHub Actions".'
+          }
+
+          document.getElementById('boot-error-detail').textContent = text
           document.getElementById('boot-error').hidden = false
         }, 5000)
       })()
