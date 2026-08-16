@@ -36,11 +36,9 @@ jobs:
           VITE_BASE: /${{ github.event.repository.name }}/
         run: npm run build
 
+      # Requires Settings → Pages → Source: "GitHub Actions".
+      # Enabling it from here needs permissions GITHUB_TOKEN does not have.
       - uses: actions/configure-pages@v5
-        # Turns Pages on (source: GitHub Actions) the first time this runs,
-        # so no manual toggle in repo settings is needed.
-        with:
-          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
