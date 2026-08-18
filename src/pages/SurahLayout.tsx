@@ -127,5 +127,5 @@ const EMPTY_SURAH = {
   shanENuzul: { title: '', body: [] },
   virtues: { title: '', body: [] },
   ayahs: [],
-  mindMap: { rootArabic: '', rootUccharon: '', rootBn: '', branches: [], patterns: [] },
+  mindMap: { intro: '', rootAyah: 0, rootArabic: '', rootUccharon: '', rootBn: '', branches: [], patterns: [] },
 } satisfies Surah

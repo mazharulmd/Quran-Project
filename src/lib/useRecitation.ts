@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Surah } from '../types'
 
+/** How far a landed seek may sit from its target before we retry (seconds). */
+const SEEK_TOLERANCE = 0.5
+
 export interface PlayOptions {
   /** How many times each ayah in the plan is recited. 1 = once. */
   repeat?: number
@@ -61,6 +64,8 @@ export function useRecitation(surah: Surah): Recitation {
   const planRef = useRef<Plan | null>(null)
   const rafRef = useRef<number | null>(null)
   const gapTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  /** Removes any pending seek-retry listeners; null when none are attached. */
+  const seekRetryRef = useRef<(() => void) | null>(null)
 
   const [currentAyah, setCurrentAyah] = useState<number | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -115,6 +120,7 @@ export function useRecitation(surah: Surah): Recitation {
       clearTimeout(gapTimerRef.current)
       gapTimerRef.current = null
     }
+    seekRetryRef.current?.()
   }, [])
 
   const stop = useCallback(() => {
@@ -141,7 +147,27 @@ export function useRecitation(surah: Surah): Recitation {
       setInGap(false)
 
       const go = () => {
+        seekRetryRef.current?.()
         audio.currentTime = seg.start
+
+        // Seeking into a region the browser has not buffered yet gets clamped
+        // to whatever is seekable, so a later ayah would play the wrong audio
+        // and never reach its end boundary. Re-attempt as more data arrives.
+        if (Math.abs(audio.currentTime - seg.start) > SEEK_TOLERANCE) {
+          const retry = () => {
+            audio.currentTime = seg.start
+            if (Math.abs(audio.currentTime - seg.start) <= SEEK_TOLERANCE) seekRetryRef.current?.()
+          }
+          const detach = () => {
+            audio.removeEventListener('progress', retry)
+            audio.removeEventListener('canplaythrough', retry)
+            seekRetryRef.current = null
+          }
+          seekRetryRef.current = detach
+          audio.addEventListener('progress', retry)
+          audio.addEventListener('canplaythrough', retry)
+        }
+
         audio.playbackRate = rate
         void audio
           .play()

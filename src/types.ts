@@ -4,6 +4,9 @@ export type TajweedRuleId =
   | 'ghunnah'
   | 'qalqalah'
   | 'madd'
+  | 'madd-muttasil'
+  | 'madd-lazim'
+  | 'idgham'
   | 'izhar'
   | 'lam-shamsi'
   | 'lam-qamari'
@@ -103,6 +106,10 @@ export interface MindMapBranch {
 }
 
 export interface MindMap {
+  /** Bangla sentence describing this surah's particular shape. */
+  intro: string
+  /** Which ayah the root card shows and plays. */
+  rootAyah: number
   rootArabic: string
   rootUccharon: string
   rootBn: string

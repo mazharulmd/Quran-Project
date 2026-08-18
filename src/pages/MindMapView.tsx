@@ -3,8 +3,8 @@ import { bn } from '../lib/format'
 import { PlayIcon, SparkIcon } from '../components/Icons'
 
 /**
- * A screen version of the printed mind map: one root, four branches sharing
- * the same stem, plus the linguistic patterns that make the surah stick.
+ * A screen version of the printed mind map: a root ayah, the branches growing
+ * from it, plus the linguistic patterns that make the surah stick.
  */
 export function MindMapView() {
   const { surah, play, rec } = useSurahCtx()
@@ -15,8 +15,7 @@ export function MindMapView() {
       <section className="surface p-4">
         <h2 className="text-base font-bold">মাইন্ড ম্যাপ — এক নজরে পুরো সূরা</h2>
         <p className="mt-1 text-sm" style={{ color: 'var(--text-muted)' }}>
-          সূরাটি একটি গাছের মতো: একটি কাণ্ড (আশ্রয় প্রার্থনা) থেকে চারটি শাখা (চার ধরনের অনিষ্ট)। ভাষার
-          এই পুনরাবৃত্ত গঠন চিনে ফেললে দীর্ঘ আয়াতও ছোট ছোট পরিচিত টুকরোয় ভেঙে মুখস্থ করা যায়।
+          {map.intro}
         </p>
       </section>
 
@@ -27,7 +26,7 @@ export function MindMapView() {
           style={{ background: 'var(--gold-soft)', border: '1px solid var(--gold)' }}
         >
           <p className="chip mb-2" style={{ color: 'var(--gold)', borderColor: 'var(--gold)' }}>
-            আয়াত {bn(1)} · কাণ্ড
+            আয়াত {bn(map.rootAyah)} · কাণ্ড
           </p>
           <p className="arabic text-3xl sm:text-4xl" lang="ar">
             {map.rootArabic}
@@ -38,7 +37,7 @@ export function MindMapView() {
           <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
             {map.rootBn}
           </p>
-          <button className="btn mt-3 px-3 py-1.5 text-xs" onClick={() => play(1)}>
+          <button className="btn mt-3 px-3 py-1.5 text-xs" onClick={() => play(map.rootAyah)}>
             <PlayIcon size={13} /> শুনুন
           </button>
         </div>
