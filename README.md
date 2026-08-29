@@ -5,10 +5,11 @@ tajweed colour-coded Arabic, Bangla উচ্চারণ (transliteration) and 
 per-ayah tafsir, word-by-word breakdown, a mind map of the surah's linguistic
 patterns, and a memorisation workshop with progress tracking.
 
-Surahs included so far, both recited by Shaykh Yasser Al-Dosari:
+Surahs included so far, all recited by Shaykh Yasser Al-Dosari:
 
 | # | Surah | Ayahs | Audio |
 | --- | --- | --- | --- |
+| 1 | Al-Fatiha (আল-ফাতিহা) | 7 | 46s |
 | 93 | Ad-Duha (আদ-দুহা) | 11 | 47s |
 | 113 | Al-Falaq (আল-ফালাক) | 5 | 21s |
 

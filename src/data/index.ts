@@ -1,8 +1,9 @@
 import type { Ayah, Surah } from '../types'
+import { alFatiha } from './surah-001-al-fatiha'
 import { adDuha } from './surah-093-ad-duha'
 import { alFalaq } from './surah-113-al-falaq'
 
-export const SURAHS: Surah[] = [adDuha, alFalaq]
+export const SURAHS: Surah[] = [alFatiha, adDuha, alFalaq]
 
 export function getSurah(numberLike: string | number | undefined): Surah | undefined {
   const n = Number(numberLike)
