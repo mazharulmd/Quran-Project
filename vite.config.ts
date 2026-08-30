@@ -82,4 +82,7 @@ function githubPagesFiles(): Plugin {
 export default defineConfig({
   base: './',
   plugins: [react(), tailwindcss(), inlineEntryScript(), githubPagesFiles()],
+  server: {
+    allowedHosts: ['.monkeycode-ai.live'],
+  },
 })

@@ -11,6 +11,7 @@ Surahs included so far, all recited by Shaykh Yasser Al-Dosari:
 | --- | --- | --- | --- |
 | 1 | Al-Fatiha (আল-ফাতিহা) | 7 | 46s |
 | 93 | Ad-Duha (আদ-দুহা) | 11 | 47s |
+| 107 | Al-Ma'un (আল-মা‘উন) | 7 | 26s |
 | 113 | Al-Falaq (আল-ফালাক) | 5 | 21s |
 
 ## Features
