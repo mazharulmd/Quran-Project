@@ -1,7 +1,5 @@
 # কুরআন পাঠশালা — Quranic Learning App
 
-🌐 **Live app: [mazharulislam.me/Quran-Project](https://mazharulislam.me/Quran-Project/)**
-
 An ayah-by-ayah Qur'an learning web app in Bangla: per-ayah recitation audio,
 tajweed colour-coded Arabic, Bangla উচ্চারণ (transliteration) and translation,
 per-ayah tafsir, word-by-word breakdown, a mind map of the surah's linguistic
