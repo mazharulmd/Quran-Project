@@ -1,5 +1,7 @@
 # কুরআন পাঠশালা — Quranic Learning App
 
+🌐 **Live app: [mazharulislam.me/Quran-Project](https://mazharulislam.me/Quran-Project/)**
+
 An ayah-by-ayah Qur'an learning web app in Bangla: per-ayah recitation audio,
 tajweed colour-coded Arabic, Bangla উচ্চারণ (transliteration) and translation,
 per-ayah tafsir, word-by-word breakdown, a mind map of the surah's linguistic
@@ -62,12 +64,30 @@ npm run lint
 `base` is `./` and routing is hash-based, so `dist/` can be dropped on GitHub
 Pages, S3, Netlify or any sub-path without configuration.
 
-### Deployment hardening
+### Deployment
 
-`.github/workflows/deploy.yml` publishes `dist/` to GitHub Pages on every push
-to the default branch. Pages must be set to **Settings → Pages → Source:
-"GitHub Actions"** by hand — `configure-pages` cannot enable it, because
-`GITHUB_TOKEN` lacks the permission (`Resource not accessible by integration`).
+The app is deployed and publicly available at:
+
+**https://mazharulislam.me/Quran-Project/**
+
+`.github/workflows/deploy.yml` runs on every push to `main` or the current
+default branch, and on manual `workflow_dispatch`. It publishes the built
+`dist/` twice over, so the site stays live under either Pages setting:
+
+- it force-pushes `dist/` to the `gh-pages` branch (works when
+  **Settings → Pages → Source** is *"Deploy from a branch"*), and
+- it uploads the same build as a Pages artifact (works when Source is
+  *"GitHub Actions"*).
+
+Only one path is ever active; the other is a harmless no-op. Both exist because
+`GITHUB_TOKEN` cannot flip that setting itself, and serving the repository
+source instead of the build yields a blank page.
+
+Because `base` is `./` and routing is hash-based, the same build works at a
+repository sub-path, a domain root, or a custom-domain sub-path such as
+`/Quran-Project/`.
+
+### Deployment hardening
 
 Three build-time measures exist so a deployed page cannot fail silently:
 
