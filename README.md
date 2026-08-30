@@ -1,4 +1,4 @@
-# কুরআন পাঠশালা — Quranic Learning App
+# কুরআন পাঠশালা - Quranic Learning App
 
 An ayah-by-ayah Qur'an learning web app in Bangla: per-ayah recitation audio,
 tajweed colour-coded Arabic, Bangla উচ্চারণ (transliteration) and translation,
